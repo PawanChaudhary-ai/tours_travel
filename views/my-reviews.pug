@@ -1,0 +1,40 @@
+extends base
+include _reviewCard
+
+mixin navItem(link, text, icon, active)
+    li(class=`${active === true? 'side-nav--active': ''}`)
+        a(href=`${link}`)
+            svg
+                use(xlink:href=`img/icons.svg#icon-${icon}`)
+            | #{text}
+
+block content 
+    main.main
+        .user-view
+            nav.user-view__menu
+                ul.side-nav
+                    +navItem('/me', 'Settings', 'settings', true)
+                    +navItem('/my-tours', 'My bookings', 'briefcase')
+                    +navItem('/my-reviews', 'My reviews', 'star')
+                    +navItem('#', 'Billing', 'credit-card')
+                    - if(user.role === 'admin')
+                        .admin-nav
+                            h5.admin-nav__heading Admin
+                            ul.side-nav
+                                +navItem('', 'Manage tours', 'map', true)
+                                +navItem('#', 'Manage users', 'users')
+                                +navItem('#', 'Manage reviews', 'star')
+                                +navItem('#', 'Manage Booking', 'briefcase')
+
+            .user-view__content
+                .user-view__form-container
+                    h2.heading-secondary.ma-bt-md My Reviews
+                    - console.log('reviews -> ',reviews)
+                    if reviews.length === 0
+                        .ma-bt-lg
+                            h2.heading-secondary No reviews found
+                    else
+                        each review in reviews
+                          .reviews_item
+                            +reviewCords(review, true)
+                            <br />
